@@ -1,16 +1,16 @@
 
 import time
 from datetime import datetime
-import random
 import json
 from pathlib import Path
-import glob
 import ctypes
+from src.weighting import pick_weighted_random, update_weighting_file
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROGRAM_DATA_DIR = PROJECT_ROOT / "program_data"
 SETTINGS_FILE = PROGRAM_DATA_DIR / "settings.json"
+IMAGE_WEIGHTING_FILE = PROGRAM_DATA_DIR / "image_weighting.json"
 IMAGES_DIR = PROJECT_ROOT / "images"
 
 
@@ -19,14 +19,15 @@ def update_wallpaper():
     Function to update the wallpaper with a random image from the images folder
     :return: None
     """
-    image_files = glob.glob(str(IMAGES_DIR / "*"))
-    for image in image_files:
-        if not image.lower().endswith(('.png', '.jpg', '.jpeg')):
-            image_files.pop(image_files.index(image))
-    rand_image = random.choice(image_files)
-    ctypes.windll.user32.SystemParametersInfoW(20, 0, str(rand_image), 3)
+    try:
+        update_weighting_file(IMAGE_WEIGHTING_FILE, IMAGES_DIR)
+        random_image_path = pick_weighted_random(IMAGES_DIR, IMAGE_WEIGHTING_FILE)
+        ctypes.windll.user32.SystemParametersInfoW(20, 0, str(random_image_path), 3)
+    except Exception as e:
+        print("Unexpected error:\n", str(e))
+        print("Exiting...")
+        exit()
     print("Wallpaper updated...")
-
 
 def create_default_settings():
     """
@@ -34,7 +35,7 @@ def create_default_settings():
     :return: None
     """
     print("Creating default settings file...")
-    default_settings = {"update_freq": "m", "continue_prog": "True"}
+    default_settings = {"update_freq": "h", "continue_prog": "True"}
     json_string = json.dumps(default_settings, indent=4)
     try:
         PROGRAM_DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -86,6 +87,10 @@ def read_last_update_time_from_settings():
             second=settings["last_update_sec"]
         )
         return last_update_time
+    except FileNotFoundError:
+        print("Settings file not found. Generating default settings...")
+        create_default_settings()
+        return read_last_update_time_from_settings()
     except Exception as e:
         print("Unexpected error:\n", str(e))
         print("Exiting...")

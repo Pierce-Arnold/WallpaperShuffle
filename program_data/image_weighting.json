@@ -1,0 +1,60 @@
+{
+    "Inception.png": {
+        "weight": 0.8,
+        "tags": [
+            "movie",
+            "quotes"
+        ]
+    },
+    "LenovoWallPaper.jpg": {
+        "weight": 1,
+        "tags": [
+            "defaults",
+            "system"
+        ]
+    },
+    "braveheart.png": {
+        "weight": 1,
+        "tags": []
+    },
+    "braveheart2.png": {
+        "weight": 1,
+        "tags": []
+    },
+    "braveheart3.png": {
+        "weight": 1,
+        "tags": []
+    },
+    "Gandalf.png": {
+        "weight": 1,
+        "tags": []
+    },
+    "Shawshank.png": {
+        "weight": 1,
+        "tags": []
+    },
+    "movie": {
+        "weight": 1,
+        "tags": [
+            "tag"
+        ]
+    },
+    "quotes": {
+        "weight": 1,
+        "tags": [
+            "tag"
+        ]
+    },
+    "defaults": {
+        "weight": 1,
+        "tags": [
+            "tag"
+        ]
+    },
+    "system": {
+        "weight": 1,
+        "tags": [
+            "tag"
+        ]
+    }
+}
